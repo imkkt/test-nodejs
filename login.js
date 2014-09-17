@@ -31,13 +31,24 @@ $(document).ready(function () {
 			url: "/login",
 			data: JSON.stringify(formData),
 			dataType: "json",
-			contentType: "application/json",
-			success: function (data) {
-				if (data.code!=0) {
-					alertMessage('loginError', 'Login failed. Please retry.');
-				} else {
-					location.href = "/";
-				}
+			contentType: "application/json"
+		}).done(function (data) {
+
+			if (data.code!=0) {
+				alertMessage('loginError', 'Login failed. Please retry.');
+			} else {
+				console.log('token:', data.token);
+				localStorage['token'] = data.token;
+
+				//window.location = '/charSelect';
+				$.ajax({
+					type: "POST",
+					url: "/charSelect",
+					data: JSON.stringify({token:data.token}),
+					dataType: "json",
+					contentType:"application/json"
+
+				});
 			}
 		});
 		e.preventDefault();

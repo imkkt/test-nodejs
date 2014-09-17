@@ -3,6 +3,7 @@ var fs = require('fs');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var path = require('path');
+var jwt = require('jwt-simple');
 
 var loginPage = {data:null};
 var charSelectPage = {data:null};
@@ -35,7 +36,7 @@ var app = express();
 app.use(express.static(path.join(__dirname,'/')));
 app.use(bodyParser.json({type:'application/json'}));
 
-var UserDataSchema = mongoose.Schema({userId:String, password:String})
+var UserDataSchema = mongoose.Schema({userId:String, password:String, token:String})
 var UserData = mongoose.model('user', UserDataSchema);
 
 app.get('/', function (req, res) {
@@ -47,34 +48,53 @@ app.get('/', function (req, res) {
 app.post('/signup', function (req, res) {
 	console.log(req.body.userId, req.body.password);
 
-	var newUser = new UserData({userId:req.body.userId, password:req.body.password});
+	var newUser = new UserData({userId:req.body.userId, password:req.body.password, token:null});
 	newUser.save();
 	res.end()
 });
 
 
 app.post('/login', function (req, res) {
-	req.body.userId;
 
 	UserData.find({userId:req.body.userId, password:req.body.password}, function (err, users) {
 
-		var resultData = {code:-1};
+		var loginResult = {code:-1};
 
 		if (err) {
 			console.error(err);
 
 		} else {
 
-			if (users.length > 0) {
-				console.log('find user!', users);
-				resultData.code=0;
+			if (users.length == 1) {
+				var user = users[0];
+				var payload = {uuid:user._id, expire:Date.now()};
+
+				loginResult.code=0;
+				loginResult.token = jwt.encode(payload,'someSecret');
+
+				user.token = loginResult.token;
+				user.save(function (err) {
+					if (err) { console.error(err); }
+
+					console.log('login user!', user);
+					console.log('uuid:',payload.uuid,'expire:',payload.expire);
+				});
 			}
 
 		}
 
 		res.writeHead(200, {'Content-Type':'application/json'});
-		res.end(JSON.stringify(resultData));
+		res.end(JSON.stringify(loginResult));
 	});
+});
+
+app.post('/charSelect', function (req, res) {
+
+	console.log('token', req.body.token);
+
+	res.writeHead(200, {'Content-Type':'text/html'});
+	res.end(charSelectPage.data);
+
 });
 
 app.listen(3000);
