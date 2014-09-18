@@ -1,13 +1,13 @@
-$(document).ready(function () {
+function alertMessage (id, msg) {
+	$('#alertHolder').html(
+		'<div class="alert alert-error id="'+id+'"><a class="close" data-dismiss="alert">&times;</a><h4>'+msg+'</h4></div>'
+	);
+	window.setTimeout(function() {
+		$('#alertHolder').html('');
+	}, 3000);
+};
 
-	function alertMessage (id, msg) {
-		$('#alertHolder').html(
-			'<div class="alert alert-error id="'+id+'"><a class="close" data-dismiss="alert">&times;</a><h4>'+msg+'</h4></div>'
-		);
-		window.setTimeout(function() {
-			$('#alertHolder').html('');
-		}, 2000);
-	};
+$(document).ready(function () {
 
 	$("#loginForm").bind('keydown', function (e) {
 		if (e.keyCode == 13) {
@@ -33,23 +33,17 @@ $(document).ready(function () {
 			dataType: "json",
 			contentType: "application/json"
 		}).done(function (data) {
+			//data = token
 
 			if (data.code!=0) {
 				alertMessage('loginError', 'Login failed. Please retry.');
-			} else {
-				console.log('token:', data.token);
-				localStorage['token'] = data.token;
-
-				//window.location = '/charSelect';
-				$.ajax({
-					type: "POST",
-					url: "/charSelect",
-					data: JSON.stringify({token:data.token}),
-					dataType: "json",
-					contentType:"application/json"
-
-				});
+				return;
 			}
+
+			console.log('token:', data.token);
+			localStorage['token'] = data.token;
+
+			window.location.replace('/charSelect');
 		});
 		e.preventDefault();
 	});
