@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<title>Main</title>
 	<meta name="veiwport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 	<style type="text/css">
 	body {
@@ -19,8 +20,9 @@
 	</style>
 </head>
 <body>
-	<script src="http://code.jquery.com/jquery.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./main.js" charset='euc-kr'></script>
 
 	<div class="container">
 
@@ -29,11 +31,22 @@
 				<img src="http://rgr.kr/rgr/skin/rgrong/css/dark_gray/no_face.jpg" alt="img here"></img>
 			</div>
 			<div class="span4">
-				<ul>
-					<li>name: blahblah</li>
-					<li>hp: 100</li>
-					<li>mp: 100</li>
-				</ul>
+				<div class="row">
+					<div class="span1"><h5>level</h5></div>
+					<div class="span2" id="lv"></div>
+				</div>
+				<div class="row">
+					<div class="span1"><h5>name</h5></div>
+					<div class="span2" id="name"></div>
+				</div>
+				<div class="row">
+					<div class="span1"><h5>hp</h5></div>
+					<div class="span2" id="hp"></div>
+				</div>
+				<div class="row">
+					<div class="span1"><h5>exp</h5></div>
+					<div class="span2" id="exp"></div>
+				</div>
 			</div>
 	</div>
 
@@ -45,16 +58,13 @@
 
 	<div class="row show-grid">
 		<div class="span6">
-			event text here
+			<div id="eventText">What do you gonna do?</div>
 			<div class="row">
-				<div class="span2">
-					<button class="btn">something</button>
+				<div class="span2 offset1">
+					<button class="btn" id="battleBtn">Battle</button>
 				</div>
 				<div class="span2">
-					<button class="btn">something</button>
-				</div>
-				<div class="span2">
-					<button class="btn">something</button>
+					<button class="btn" id="restBtn">Rest</button>
 				</div>
 			</div>
 		</div>
